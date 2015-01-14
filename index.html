@@ -34,13 +34,12 @@
       position: absolute;
       top:100px;
       left:100px;
-      width:800px;
+      width:100%;
       box-shadow: 0 0 15px #333;
     }
 
     table {
       border-spacing: 0;
-      width:100%;
     }
 
       td + td {
@@ -49,7 +48,7 @@
 
       td, th {
         border-bottom:1px solid #eee;
-        padding: 10px 25px;
+        padding: 4px 5px;
       }
 
       .table>thead>tr>th {
@@ -89,6 +88,24 @@
       top: 95px;
       left: 20px;
       z-index: 50;
+    }
+
+    @media(max-width:670px){
+      body{
+        font-size:12px;
+      }
+
+      section{
+        padding-top: 15px;
+      }
+
+      .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+        padding:0px;
+      }
+
+      th div{
+        padding: 0px 25px;
+      }
     }
 
   </style>
