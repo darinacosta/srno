@@ -24,9 +24,59 @@
       background-color: rgb(216, 190, 190); 
     }
 
-    #srno-table-wrapper{
+    section{
+      position:relative;
+      padding-top: 37px;
       height:40%;
-      overflow-y:scroll;
+    }
+
+    section.positioned {
+      position: absolute;
+      top:100px;
+      left:100px;
+      width:800px;
+      box-shadow: 0 0 15px #333;
+    }
+
+    table {
+      border-spacing: 0;
+      width:100%;
+    }
+
+      td + td {
+        border-left:1px solid #eee;
+      }
+
+      td, th {
+        border-bottom:1px solid #eee;
+        padding: 10px 25px;
+      }
+
+      .table>thead>tr>th {
+        height: 0;
+        line-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        border: none;
+        white-space: nowrap;
+      }
+
+      th div{
+        position: absolute;
+        background: transparent;
+        padding: 9px 25px;
+        top: 0;
+        margin-left: -25px;
+        line-height: normal;
+      }
+
+      th:first-child div{
+        border: none;
+      }
+
+    #srno-table-wrapper{
+      overflow-y: auto;
+      height: 100%;
     }
 
     #map {
@@ -47,9 +97,11 @@
 <body>
   <div id="map"></div>
     <div id="HomeButton"></div>
-  <div id="srno-table-wrapper">
-    <table class="table table-hover tablesorter" id="srno-table"></table>
-  </div>
+  <section class="">
+    <div id="srno-table-wrapper">
+      <table class="table table-hover tablesorter" id="srno-table"></table>
+    </div>
+  </section>
 
   <script>
 
@@ -65,7 +117,7 @@
           tableString = '<thead><tr>';
           
           $.each(attributes, function(key, value){
-            tableString = tableString + '<th>' + value + ' <span class="glyphicon glyphicon-sort"></span></th>';
+            tableString = tableString + '<th><div>' + value + ' <span class="glyphicon glyphicon-sort"></span></div></th>';
           });
 
           tableString = tableString + '</tr></thead>';
@@ -99,6 +151,7 @@
     buildTableFromEsriFeatureService("#srno-table", srnoJSON, {
       "Organization_Name": "Name",
       "Boundaries": "Boundaries",
+      "POC": "Contact",
       "Email": "Email"
     });
 
@@ -106,6 +159,7 @@
 
     require(["esri/map", 
              "esri/layers/FeatureLayer",
+             "esri/layers/ArcGISTiledMapServiceLayer",
              "esri/tasks/QueryTask",
              "esri/tasks/query",
              "esri/symbols/SimpleFillSymbol",
@@ -115,13 +169,15 @@
              "esri/graphic",
              "dojo/domReady!"], 
 
-        function(Map, FeatureLayer, QueryTask, Query, SimpleFillSymbol, SimpleLineSymbol, Color, HomeButton, Graphic) {
+      function(Map, FeatureLayer, ArcGISTiledMapServiceLayer, QueryTask, Query, SimpleFillSymbol, SimpleLineSymbol, Color, HomeButton, Graphic) {
 
       map = new Map("map", {
-        basemap: "topo",
-        center: [-90.0500, 29.9667], // longitude, latitude
-        zoom: 13
+        center: [-90.02, 29.97], // longitude, latitude
+        zoom: 12
       });
+
+      basemap = new ArcGISTiledMapServiceLayer("http://gis.nola.gov:6080/arcgis/rest/services/Basemaps/BasemapNOLA3/MapServer");
+      map.addLayer(basemap);
 
       var home = new HomeButton({
         map: map
@@ -138,7 +194,7 @@
       srnoBoundaries = new FeatureLayer("http://gis.nola.gov:6080/arcgis/rest/services/Staging/SelfReportedN/MapServer/0", {
         outFields: ['Organization_Name', 'Unique_ID']
       });
-      srnoBoundaries.setOpacity(.30);
+      srnoBoundaries.setOpacity(.60);
 
       map.addLayer(srnoBoundaries);
 
@@ -161,9 +217,9 @@
 
       scrollIntoView = function(element, container) {
         var $container = $(container),
-            $element = $(element);
+        $element = $(element);
         $container.animate({
-          scrollTop: $element.offset().top - $container.offset().top + $container.scrollTop()
+        scrollTop: $element.offset().top - $container.offset().top + $container.scrollTop()
         });
       };
 
