@@ -3,11 +3,11 @@ dojoConfig = {
   packages: [
     {
       name: "helpers",
-      location: "/deployment-tool/js/helpers" 
+      location: "/srno/js/helpers" 
     },
     {
       name: "localLib",
-      location: "/deployment-tool/js/lib" 
+      location: "/srno/js/lib" 
     }
   ]
 };
