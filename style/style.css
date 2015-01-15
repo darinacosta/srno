@@ -80,6 +80,19 @@ table {
   z-index: 50;
 }
 
+#fullscreen{
+  position: absolute;
+  top: 12px;
+  width: 25px;
+  right: 12px;
+  cursor: pointer;
+  display:none;
+}
+
+#fullscreen-img{
+  width: 25px;
+}
+
 @media(max-width:670px){
   body{
     font-size:12px;
