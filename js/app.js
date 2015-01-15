@@ -33,7 +33,11 @@ require(["esri/map",
   }, "HomeButton");
   home.startup();
 
-  console.log("Application running in iframe: " + iframeDetector.inIframe());
+  addFullscreenIcon = (function(){
+    if (iframeDetector.inIframe() !== false){
+      $('#fullscreen').css('display', 'block');
+    }
+  })();
 
   tableBuilder.buildTableFromEsriFeatureService("#srno-table", srnoJSON, {
     "Organization_Name": "Name",
@@ -55,8 +59,6 @@ require(["esri/map",
   srnoBoundaries.setOpacity(.60);
 
   map.addLayer(srnoBoundaries);
-
-  console.log(srnoBoundaries);
 
   queryTask = new QueryTask("http://gis.nola.gov:6080/arcgis/rest/services/Staging/SelfReportedN/MapServer/0");
   query = new Query();
