@@ -51,14 +51,36 @@ require(["esri/map",
     SimpleLineSymbol.STYLE_SOLID,
     new Color([8, 227, 255]),
     3
-  );
+  ),
   
-  srnoBoundaries = new FeatureLayer("http://gis.nola.gov:6080/arcgis/rest/services/Staging/SelfReportedN/MapServer/0", {
+  srnoBoundariesURL = "http://gis.nola.gov:6080/arcgis/rest/services/Staging/SelfReportedN/MapServer/0",
+  srnoBoundaries = new FeatureLayer(srnoBoundariesURL, {
     outFields: ['Organization_Name', 'Unique_ID']
   });
   srnoBoundaries.setOpacity(.60);
 
   map.addLayer(srnoBoundaries);
+
+
+  ////////POLYGON STACK QUERY///////////////
+
+  map.on("click", function(evt){
+      var currentClick = evt.mapPoint;
+      var query = new Query();
+      var queryTask = new QueryTask(srnoBoundariesURL);
+      query.returnGeometry = true;
+      query.geometry = evt.mapPoint;
+      query.spatialRelationship = Query.SPATIAL_REL_WITHIN;
+      queryTask.execute(query, function(output){
+        console.log('\n=====================')
+        for (var i = 0; i<output.features.length; i++){
+          console.log(output.features[i].attributes.Organization_Name);
+        }
+        console.log('=====================')
+
+      });
+    });
+  //////////////////////////////////////
 
   queryTask = new QueryTask("http://gis.nola.gov:6080/arcgis/rest/services/Staging/SelfReportedN/MapServer/0");
   query = new Query();
@@ -91,7 +113,6 @@ require(["esri/map",
   //EVENT HANDLERS
   $('#srno-table').on('click', 'tr', function(){
     var id = $(this)[0].id;
-    console.log(id)
     highlightRow('#'+id);
     selectFeature(id);
   });
@@ -99,7 +120,6 @@ require(["esri/map",
   srnoBoundaries.on('click', function(e){
     var id = e.graphic.attributes.Unique_ID;
     selectFeature(id);
-    console.log($('#'+id));
     highlightRow('#'+id);
   })
 
